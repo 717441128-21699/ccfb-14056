@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoCap Clean · 光学动捕标记点清洗台</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand"><span class="logo">◎</span>MoCap Clean<em>光学动捕标记点清洗 · 刚体解算 · 重定向</em></div>
+        <div id="topActions">
+          <button id="btnImport">导入 CSV/JSON</button>
+          <input id="fileInput" type="file" accept=".csv,.json" />
+          <button id="btnExportCsv">导出 CSV</button>
+          <button id="btnExportJson">导出 JSON</button>
+          <button id="btnExportBvh">导出 BVH</button>
+        </div>
+      </header>
+
+      <aside class="sidebar left">
+        <div class="section">
+          <h3>测试数据生成</h3>
+          <div class="field">
+            <label>动作类型</label>
+            <select id="motionKind">
+              <option value="walk">走 walk</option>
+              <option value="run">跑 run</option>
+              <option value="jump">跳 jump</option>
+            </select>
+          </div>
+          <div class="field"><label>帧数</label><input id="frameCount" type="number" value="600" min="50" max="10000" /></div>
+          <div class="field"><label>采样率 FPS</label><input id="fps" type="number" value="100" /></div>
+          <div class="field"><label>噪声 σ (mm)</label><input id="noiseStd" type="number" value="1.5" step="0.1" /></div>
+          <div class="field"><label>丢点概率/帧</label><input id="gapRate" type="number" value="0.0009" step="0.0001" /></div>
+          <div class="field"><label>最大间隙 (帧)</label><input id="maxGap" type="number" value="24" /></div>
+          <div class="field"><label>互换事件数</label><input id="swapCount" type="number" value="14" /></div>
+          <div class="field"><label>最大互换时长</label><input id="maxSwap" type="number" value="30" /></div>
+          <div class="field"><label>随机种子</label><input id="seed" type="number" value="20261120" /></div>
+          <button id="btnGenerate" class="primary">生成走/跑/跳测试数据</button>
+        </div>
+
+        <div class="section">
+          <h3>处理流水线</h3>
+          <button id="btnClean" class="primary">1. 清洗标记点</button>
+          <button id="btnSolve" class="primary">2. 解算骨骼 + 锁脚 + 穿模</button>
+        </div>
+
+        <div class="section">
+          <h3>显示</h3>
+          <label class="radio"><input type="radio" name="view" id="viewRaw" /> 原始（含丢点/互换）</label>
+          <label class="radio"><input type="radio" name="view" id="viewCleaned" checked /> 清洗后</label>
+        </div>
+      </aside>
+
+      <main class="viewport">
+        <canvas id="glCanvas"></canvas>
+        <div class="hud"><span id="frameLabel">帧 0 / 0</span></div>
+        <div id="status">就绪</div>
+      </main>
+
+      <aside class="sidebar right">
+        <div class="section">
+          <h3>清洗报告</h3>
+          <div id="reportPanel"><p class="muted">运行清洗后显示报告</p></div>
+        </div>
+        <div class="section">
+          <h3>身材重定向</h3>
+          <div class="field">
+            <select id="bodySelect"></select>
+          </div>
+        </div>
+        <div class="section">
+          <h3>事件</h3>
+          <div id="eventPanel" class="event-list"><p class="muted">解算后显示着地/穿模事件</p></div>
+        </div>
+      </aside>
+
+      <footer class="timeline">
+        <div class="timeline-row">
+          <button id="btnPlay">播放</button>
+          <input id="scrubber" type="range" min="0" max="0" value="0" />
+          <span class="pill" id="timePill">0.00 s</span>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
