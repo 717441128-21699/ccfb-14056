@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>光学动捕数据清洗工具</title>
+    <link rel="stylesheet" href="/src/ui/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="title">光学动捕标记点清洗工具</div>
+        <div class="actions">
+          <label class="btn">
+            <input type="file" id="fileInput" accept=".csv" hidden />
+            导入 CSV
+          </label>
+          <button class="btn" id="demoBtn">生成演示数据</button>
+          <button class="btn" id="runBtn" disabled>运行清洗</button>
+          <button class="btn" id="exportBtn" disabled>导出 CSV</button>
+          <button class="btn" id="exportJsonBtn" disabled>导出 JSON</button>
+        </div>
+      </header>
+
+      <div class="main">
+        <aside class="sidebar">
+          <section class="panel">
+            <h3>数据参数</h3>
+            <label>动作
+              <select id="actionSel">
+                <option value="walk">走</option>
+                <option value="run">跑</option>
+                <option value="jump">跳</option>
+              </select>
+            </label>
+            <label>帧数 <input type="number" id="frameCount" value="600" min="60" max="5000" /></label>
+            <label>采样率 <input type="number" id="fps" value="120" min="30" max="240" /></label>
+            <label>噪声 σ(mm) <input type="number" id="noise" value="0.8" step="0.1" min="0" /></label>
+            <label>丢点率 <input type="number" id="missing" value="0.12" step="0.01" min="0" max="0.5" /></label>
+            <label>互换对数 <input type="number" id="swaps" value="4" min="0" max="40" /></label>
+          </section>
+
+          <section class="panel">
+            <h3>角色身材</h3>
+            <label>体型预设
+              <select id="bodySel">
+                <option value="standard">标准(1.75m)</option>
+                <option value="tall">高个(1.90m)</option>
+                <option value="short">矮个(1.55m)</option>
+                <option value="broad">肩宽(1.78m)</option>
+              </select>
+            </label>
+          </section>
+
+          <section class="panel">
+            <h3>显示图层</h3>
+            <label><input type="checkbox" id="showMarkers" checked /> 标记点</label>
+            <label><input type="checkbox" id="showSkeleton" checked /> 骨骼</label>
+            <label><input type="checkbox" id="showIssues" checked /> 穿模标注</label>
+            <label><input type="checkbox" id="showLocks" checked /> 足部锁定</label>
+            <label><input type="checkbox" id="colorFill" checked /> 按补点来源着色</label>
+          </section>
+
+          <section class="panel stats" id="statsPanel">
+            <h3>清洗报告</h3>
+            <div id="stats">尚未运行。</div>
+          </section>
+        </aside>
+
+        <section class="viewport">
+          <canvas id="glcanvas"></canvas>
+          <div class="timeline">
+            <button id="playBtn" class="btn">播放</button>
+            <input type="range" id="scrub" min="0" max="0" value="0" />
+            <span id="frameLabel">0 / 0</span>
+          </div>
+          <div class="legend" id="legend"></div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/ui/main.ts"></script>
+  </body>
+</html>
